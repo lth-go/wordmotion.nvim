@@ -1,95 +1,106 @@
-# More useful word motions for Vim
+# More useful word motions for Neovim
 
-This is one word under Vim's definition:
+A Lua rewrite of [vim-wordmotion](https://github.com/chaoren/vim-wordmotion) for Neovim.
 
-```
-CamelCaseACRONYMWords_underscore1234
-w--------------------------------->w
-e--------------------------------->e
-b<---------------------------------b
-```
-
-With this plugin, this becomes six words:
+Vim treats `CamelCaseACRONYMWords_underscore1234` as one word. This plugin splits it into six words:
 
 ```
 CamelCaseACRONYMWords_underscore1234
-w--->w-->w----->w---->w-------->w->w
+w--->w-->w----->w--->w--------->w->w
 e-->e-->e----->e--->e--------->e-->e
 b<---b<--b<-----b<----b<--------b<-b
 ```
 
-## `word` definitions
+## Word definition
 
-A `word` (lowercase) is any of the following:
+A `word` is any of:
 
-| `word`           | Example               |
+| Type             | Example               |
 | :--------------- | :-------------------- |
-| Camel case words | `[Camel][Case]`       |
+| CamelCase        | `[Camel][Case]`       |
 | Acronyms         | `[HTML]And[CSS]`      |
-| Uppercase words  | `[UPPERCASE] [WORDS]` |
-| Lowercase words  | `[lowercase] [words]` |
+| Uppercase        | `[UPPERCASE]`         |
+| Lowercase        | `[lowercase]`         |
 | Hex color codes  | `[#0f0f0f]`           |
-| Hex literals     | `[0x00ffFF] [0x0f]`   |
-| Octal literals   | `[0o644] [0o0755]`    |
-| Binary literals  | `[0b01] [0b0011]`     |
-| Regular numbers  | `[1234] [5678]`       |
-| Other characters | `[~!@#$]`             |
+| Hex literals     | `[0x00ffFF]`          |
+| Octal literals   | `[0o644]`             |
+| Binary literals  | `[0b01]`              |
+| Numbers          | `[1234]`              |
+| Other printable  | `[~!@#$]`             |
 
-A `WORD` (uppercase) is any sequence of non-space characters separated by
-spaces.
+Default space characters (where `w` stops):
+1. Whitespace
+2. Hyphens (`-`) between alphabetic characters
+3. Underscores (`_`) between alphanumeric characters
 
-## Customization
+## Installation
 
-Default `word`/`WORD` mappings:
+### lazy.nvim
 
-| Mode  |          Mapping          |
-| :---: | :-----------------------: |
-| `nxo` |          `w`/`W`          |
-| `nxo` |          `b`/`B`          |
-| `nxo` |          `e`/`E`          |
-| `nxo` |         `ge`/`gE`         |
-| `xo`  |         `aw`/`aW`         |
-| `xo`  |         `iw`/`iW`         |
-|  `c`  | `<C-R><C-W>`/`<C-R><C-A>` |
+```lua
+{
+  "lth-go/wordmotion.nvim",
+  lazy = false,
+  opts = {},
+}
+```
 
-You do **NOT** need any of the mapping customizations below if the default
-mappings already work for you.
+### Manual
 
-### `g:wordmotion_prefix`
+```lua
+require("wordmotion").setup()
+```
 
-Use `g:wordmotion_prefix` to apply a common prefix to each of the default word
-motion mappings.
+## Configuration
 
-### `g:wordmotion_mappings`
+```lua
+require("wordmotion").setup({
+  mappings = {
+    ["w"] = "<M-w>",
+    ["e"] = "<M-e>",
+    ["b"] = "<M-b>",
+    ["ge"] = "g<M-e>",
+    ["aw"] = "a<M-w>",
+    ["iw"] = "i<M-w>",
+  },
+})
+```
 
-Use `g:wordmotion_mappings` to individually replace the default word motion
-mappings. `g:wordmotion_mappings` is a dictionary where the keys are the default
-mappings and the values are the mappings that you want to replace them with.
-Unspecified entries will still use the default mappings. Entries set to an empty
-string will be disabled.
+### Default mappings
 
-### `g:wordmotion_nomap`
+| Mode | Motion   | Description            |
+| :--: | :------- | :--------------------- |
+| nxo  | `<M-w>`  | Forward word motion    |
+| nxo  | `<M-e>`  | Forward end of word    |
+| nxo  | `<M-b>`  | Backward word motion   |
+| nxo  | `g<M-e>` | Backward end of word   |
+| xo   | `a<M-w>` | A word text object     |
+| xo   | `i<M-w>` | Inner word text object |
 
-Use `g:wordmotion_nomap` to disable all of the default mappings. You can create
-your own mappings to the `<Plug>WordMotion_` internal mappings. Since there are
-multiple modes involved for many of the mappings, it's probably more convenient
-to use `g:wordmotion_prefix` or `g:wordmotion_mappings`.
+### Custom mappings
 
-### `g:wordmotion_spaces`
+Override any default mapping by setting its value. Set to `""` to disable.
 
-Use `g:wordmotion_spaces` to designate extra space characters.
-`g:wordmotion_spaces` is a list where each item is a regular expression for
-a character that you want to treat as a space. You have to make sure the regex
-matches a single character. You can use lookaheads and lookbehinds for
-context-sensitive space characters.
+```lua
+require("wordmotion").setup({
+  mappings = {
+    ["w"] = "<Leader>w",
+    ["e"] = "<Leader>e",
+    ["b"] = "<Leader>b",
+    ["ge"] = "<Leader>ge",
+    ["iw"] = "i<Leader>w",
+    ["aw"] = "a<Leader>w",
+  },
+})
+```
 
-By default, these are treated as spaces in addition to the actual space
-characters:
-1. hyphens (`-`) between between alphabetic characters
-2. underscores (`_`) between alphanumeric characters
+### Disable specific mappings
 
-### `g:wordmotion_uppercase_spaces`
-
-Use `g:wordmotion_uppercase_spaces` to designate extra space characters for
-uppercase motions. These are separate from `g:wordmotion_spaces`. There are
-no extra space characters for uppercase motions by default.
+```lua
+require("wordmotion").setup({
+  mappings = {
+    ["w"] = "",   -- disabled
+    ["e"] = "",   -- disabled
+  },
+})
+```

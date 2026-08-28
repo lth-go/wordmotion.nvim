@@ -1,9 +1,9 @@
 Execute (Disable plugin):
-  let g:wordmotion_nomap = 1
-  call wordmotion#reload()
+  lua require("wordmotion").setup({ mappings = { ["w"] = "", ["e"] = "", ["b"] = "", ["ge"] = "", ["iw"] = "", ["aw"] = "" } })
 
 Include: iw.vader
-Include: aw.vader
 
 Execute (Reset plugin for further tests):
-  call wordmotion#_default()
+  lua require('wordmotion').setup({
+  \ mappings = { ["w"]="w", ["e"]="e", ["b"]="b", ["ge"]="ge", ["aw"]="aw", ["iw"]="iw" },
+  \ })
