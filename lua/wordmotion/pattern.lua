@@ -43,17 +43,17 @@ function M.build()
   local function add(p)
     words[#words + 1] = p
   end
-  add(upper .. lower .. "\\+")           -- CamelCase
+  add(upper .. lower .. "\\+") -- CamelCase
   add(upper .. "\\+" .. lower .. "\\@!") -- UPPERCASE
-  add(lower .. "\\+")                     -- lowercase
-  add("#" .. xdigit .. "\\+\\>")          -- #0F0F0F
-  add("\\<0[xX]" .. xdigit .. "\\+\\>")   -- 0x00 0Xff
-  add("\\<0[oO][0-7]\\+\\>")              -- 0o00 0O77
-  add("\\<0[bB][01]\\+\\>")               -- 0b00 0B11
-  add(digit .. "\\+")                     -- 1234 5678
+  add(lower .. "\\+") -- lowercase
+  add("#" .. xdigit .. "\\+\\>") -- #0F0F0F
+  add("\\<0[xX]" .. xdigit .. "\\+\\>") -- 0x00 0Xff
+  add("\\<0[oO][0-7]\\+\\>") -- 0o00 0O77
+  add("\\<0[bB][01]\\+\\>") -- 0b00 0B11
+  add(digit .. "\\+") -- 1234 5678
   add(complement(printable, alnum, s, "#" .. xdigit) .. "\\+") -- other printable
-  add("\\%^")                             -- start of file
-  add("\\%$")                             -- end of file
+  add("\\%^") -- start of file
+  add("\\%$") -- end of file
   local word = or_list(words)
 
   return { s = s, word = word }

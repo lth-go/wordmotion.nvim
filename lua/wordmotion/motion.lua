@@ -11,10 +11,7 @@ end
 --- Check whether 'hor' is listed in 'foldopen'.
 local function foldopen_hor()
   local fo = vim.o.foldopen or ""
-  return fo == "hor"
-    or fo:match("^hor[,]") ~= nil
-    or fo:match("[, ]hor[,]") ~= nil
-    or fo:match("[, ]hor$") ~= nil
+  return fo == "hor" or fo:match("^hor[,]") ~= nil or fo:match("[, ]hor[,]") ~= nil or fo:match("[, ]hor$") ~= nil
 end
 
 --- Run `count` searches for `pattern` in the given direction.
@@ -93,11 +90,8 @@ function M.motion(pats, count, mode, flags, extra, actual_mode)
     flags = "e"
   end
 
-  -- Visual mode: reselect last selection.
   -- Operator-pending with 'e' flag: enter visual mode so the motion is inclusive.
-  if mode == "x" then
-    normal("gv")
-  elseif mode == "o" and flags:find("e") then
+  if mode == "o" and flags:find("e") then
     normal("v")
   end
 

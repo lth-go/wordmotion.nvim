@@ -22,14 +22,11 @@ local M = {}
 function M.setup(user_opts)
   local opts = vim.tbl_deep_extend("force", vim.deepcopy(config.defaults), user_opts or {})
   local pats = pattern.build()
-  mapping.apply(opts,
-    function(count, mode, flags, extra)
-      motion.motion(pats, count, mode, flags, extra)
-    end,
-    function(count, mode)
-      motion.object(pats, count, mode)
-    end
-  )
+  mapping.apply(opts, function(count, mode, flags, extra)
+    motion.motion(pats, count, mode, flags, extra)
+  end, function(count, mode)
+    motion.object(pats, count, mode)
+  end)
   return M
 end
 
